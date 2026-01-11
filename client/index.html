@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление менеджерами и клиентами</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Личный кабинет руководителя</h1>
+            <p class="subtitle">Управление менеджерами и клиентами юридических лиц</p>
+        </header>
+
+        <!-- Уведомления -->
+        <div id="notification" class="notification"></div>
+
+        <!-- Вкладки -->
+        <div class="tabs">
+            <button class="tab-button active" data-tab="managers">Менеджеры</button>
+            <button class="tab-button" data-tab="clients">Клиенты</button>
+            <button class="tab-button" data-tab="profiles">Профили обслуживания</button>
+        </div>
+
+        <!-- Вкладка: Менеджеры -->
+        <div id="managers-tab" class="tab-content active">
+            <div class="section-header">
+                <h2>Список менеджеров</h2>
+                <button id="add-manager-btn" class="btn btn-primary">+ Добавить менеджера</button>
+            </div>
+            <div id="managers-list" class="list-container"></div>
+        </div>
+
+        <!-- Вкладка: Клиенты -->
+        <div id="clients-tab" class="tab-content">
+            <div class="section-header">
+                <h2>Список клиентов</h2>
+                <button id="add-client-btn" class="btn btn-primary">+ Добавить клиента</button>
+            </div>
+            <div id="clients-list" class="list-container"></div>
+        </div>
+
+        <!-- Вкладка: Профили -->
+        <div id="profiles-tab" class="tab-content">
+            <div class="section-header">
+                <h2>Профили обслуживания</h2>
+                <button id="add-profile-btn" class="btn btn-primary">+ Добавить профиль</button>
+            </div>
+            <div id="profiles-list" class="list-container"></div>
+        </div>
+    </div>
+
+    <!-- Модальное окно: Менеджер -->
+    <div id="manager-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="manager-modal-title">Добавить менеджера</h2>
+            <form id="manager-form">
+                <div class="form-group">
+                    <label for="manager-id">ID:</label>
+                    <input type="text" id="manager-id" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="manager-name">ФИО: *</label>
+                    <input type="text" id="manager-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="manager-profile">Профиль обслуживания: *</label>
+                    <select id="manager-profile" required></select>
+                </div>
+                <div class="form-group">
+                    <label for="manager-max-clients">Максимум клиентов: *</label>
+                    <input type="number" id="manager-max-clients" min="1" value="10" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <button type="button" class="btn btn-secondary" id="cancel-manager-btn">Отмена</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно: Клиент -->
+    <div id="client-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="client-modal-title">Добавить клиента</h2>
+            <form id="client-form">
+                <div class="form-group">
+                    <label for="client-id">ID:</label>
+                    <input type="text" id="client-id" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="client-name">Наименование: *</label>
+                    <input type="text" id="client-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="client-legal-form">Организационно-правовая форма: *</label>
+                    <input type="text" id="client-legal-form" placeholder="ООО, АО, ИП и т.д." required>
+                </div>
+                <div class="form-group">
+                    <label for="client-profile">Требуемый профиль обслуживания: *</label>
+                    <select id="client-profile" required></select>
+                </div>
+                <div class="form-group">
+                    <label for="client-manager">Менеджер:</label>
+                    <select id="client-manager">
+                        <option value="">Не назначен</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <button type="button" class="btn btn-secondary" id="cancel-client-btn">Отмена</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно: Профиль -->
+    <div id="profile-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Добавить профиль обслуживания</h2>
+            <form id="profile-form">
+                <div class="form-group">
+                    <label for="profile-name">Название профиля: *</label>
+                    <input type="text" id="profile-name" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <button type="button" class="btn btn-secondary" id="cancel-profile-btn">Отмена</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно: Клиенты менеджера -->
+    <div id="manager-clients-modal" class="modal">
+        <div class="modal-content modal-large">
+            <span class="close">&times;</span>
+            <h2 id="manager-clients-title">Клиенты менеджера</h2>
+            <div class="section-header">
+                <button id="add-manager-client-btn" class="btn btn-primary">+ Добавить клиента</button>
+            </div>
+            <div id="manager-clients-list" class="list-container"></div>
+        </div>
+    </div>
+
+    <!-- Модальное окно: Назначение клиента -->
+    <div id="assign-client-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Назначить клиента менеджеру</h2>
+            <form id="assign-client-form">
+                <div class="form-group">
+                    <label for="assign-client-select">Клиент: *</label>
+                    <select id="assign-client-select" required></select>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Назначить</button>
+                    <button type="button" class="btn btn-secondary" id="cancel-assign-btn">Отмена</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно: Перевод клиента -->
+    <div id="transfer-client-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Перевести клиента другому менеджеру</h2>
+            <form id="transfer-client-form">
+                <div class="form-group">
+                    <label for="transfer-manager-select">Новый менеджер: *</label>
+                    <select id="transfer-manager-select" required></select>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Перевести</button>
+                    <button type="button" class="btn btn-secondary" id="cancel-transfer-btn">Отмена</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/profiles.js"></script>
+    <script src="js/managers.js"></script>
+    <script src="js/clients.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
